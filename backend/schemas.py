@@ -17,10 +17,6 @@ class UserRegister(BaseModel):
     )
     email: str
     role: Literal["admin", "client", "freelancer"] = Field(default="client")
-    address: str = Field(
-        default="",
-        max_length=255
-    )
 
     @field_validator("username")
     @classmethod
