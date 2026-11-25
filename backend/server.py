@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from auth import login_user, register_user
-from backend.schemas import UserLogin, UserRegister
+from schemas import UserLogin, UserRegister
 
 app = FastAPI(title="Freelance Platform API")
 

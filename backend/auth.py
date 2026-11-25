@@ -1,29 +1,47 @@
-from backend.db_connection import cursor , db
+import json
+import time
+users = json.loads(open("./data/users.json").read())
 def login_user(username, password):
-    query = "SELECT * FROM users WHERE username = %s AND password = %s"
-    try:
-        cursor.execute(query, (username, password))
-        user = cursor.fetchone()
+    for user in users:
+        if user["username"] == username and user["password"] == password:
+            return user
         return user
-    except Exception as e:
-        return {
+   
+    return {
             "status": "error",
-            "message": f"Error logging in user: {e} "
+            "message": "Invalid username or password"
         }
-def register_user(username, password, email ,role,address ):
-    query = "INSERT INTO users (username, password, role, email, address) VALUES (%s, %s, %s, %s, %s)"
-    try:
-        cursor.execute(query, (username, password, role, email, address))
-        db.commit()
-        return {
-            "status": "success",
-            "message": "User registered successfully",
-            "user_id": cursor.lastrowid
-        }
-    except Exception as e:
-        return {
-            "status": "error",
-            "message": f"Error registering user: {e}"
-        }
-        
+def register_user(username, password, email ,role,address = "" ):
+    # Check if user already exists
+    for user in users:
+        if user["username"] == username:
+            return {
+                "status": "error",
+                "message": "Username already exists"
+            }
+        if role not in ["freelancer", "client" , "admin"]:
+            return {
+                "status": "error",
+                "message": "Invalid role."
+            }
+    user_id = len(users)
+    new_user = {
+        "user_id": user_id,
+        "time" : time.daylight,
+        "username": username,
+        "password": password,
+        "email": email,
+        "role": role,
+        "address": address
+    }
+    users.append(new_user)
+    with open("./data/users.json", "w" , encoding="utf-8") as f:
+        json.dump(users, f , indent=4)
+
+    return {
+        "user_id" : user_id,
+        "status": "success",
+        "message": "User registered successfully"
+    }
+       
 #uvicorn server:app --reload
