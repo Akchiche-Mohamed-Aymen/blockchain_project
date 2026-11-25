@@ -1,11 +1,15 @@
 import json
-import time
+import uuid
 users = json.loads(open("./data/users.json").read())
 def login_user(username, password):
     for user in users:
         if user["username"] == username and user["password"] == password:
             return user
-        return user
+        return {
+        "user_id" : user["user_id"],
+        "status": "success",
+        "message": "User registered successfully"
+    }
    
     return {
             "status": "error",
@@ -24,10 +28,9 @@ def register_user(username, password, email ,role,address = "" ):
                 "status": "error",
                 "message": "Invalid role."
             }
-    user_id = len(users)
+    user_id = str(uuid.uuid4())
     new_user = {
         "user_id": user_id,
-        "time" : time.daylight,
         "username": username,
         "password": password,
         "email": email,

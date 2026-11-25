@@ -12,7 +12,6 @@ def register(user: UserRegister):
         password=user.password,
         email=user.email,
         role=user.role,
-        address=user.address
     )
 
     if result["status"] == "error":
@@ -32,3 +31,4 @@ def login(user: UserLogin):
             raise HTTPException(status_code=400, detail=result["message"])
     
     return result
+# uvicorn server:app --reload
